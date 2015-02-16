@@ -1,0 +1,89 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.github.ben-manes:gradle-versions-plugin:0.7'
+    }
+}
+
+apply plugin: 'groovy'
+apply plugin: 'maven'
+apply plugin: 'com.github.ben-manes.versions'
+
+group = 'info.appsense.gradle'
+version = '0.0.9'
+ext.packaging = 'jar'
+
+dependencies {
+    repositories {
+        mavenCentral()
+        mavenLocal()
+        jcenter()
+    }
+
+    compile localGroovy()
+    compile gradleApi()
+
+    compile 'com.google.apis:google-api-services-androidpublisher:v2-rev14-1.19.1'
+    compile 'com.android.tools.build:gradle:1.0.1'
+    compile 'commons-io:commons-io:2.4'
+
+    testCompile 'junit:junit:4.12'
+}
+
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from 'build/docs/javadoc'
+}
+
+artifacts {
+    archives jar
+    archives javadocJar
+    archives sourcesJar
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.2.1'
+}
+
+install.repositories.mavenInstaller {
+    pom.project(pomConfiguration)
+}
+
+/**v
+ * Create POM config and return for use by other tasks.
+ */
+def getPomConfiguration() {
+    return {
+        name 'Gradle HockeyApp Plugin'
+        packaging 'jar'
+        description 'A Gradle plugin which enables publish for application stores.'
+        url 'https://github.com/minakov/gradle-appstore-deploy-plugin'
+        licenses {
+            license {
+                name = 'The Apache Software License, Version 2.0'
+                url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                distribution = 'repo'
+            }
+        }
+        developers {
+            developer {
+                id 'minakov'
+                name = 'Vladimir Minakov'
+                email 'minakov@gmail.com'
+            }
+        }
+        scm {
+            connection 'scm:https://github.com/minakov/gradle-appstore-deploy-plugin'
+            developerConnection 'scm:git@github.com:minakov/gradle-appstore-deploy-plugin.git'
+            url 'https://github.com/minakov/gradle-appstore-deploy-plugin'
+        }
+    }
+}
