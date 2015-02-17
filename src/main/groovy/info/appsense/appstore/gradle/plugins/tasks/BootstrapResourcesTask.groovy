@@ -6,35 +6,39 @@ import com.google.api.services.androidpublisher.model.ApkListing
 import com.google.api.services.androidpublisher.model.Listing
 import com.google.api.services.androidpublisher.model.Track
 import info.appsense.appstore.gradle.plugins.extension.PluginExtension
-import info.appsense.appstore.gradle.plugins.internal.AndroidPublisherFactory
 import org.gradle.api.DefaultTask
-import org.gradle.api.logging.Logger
 import org.gradle.api.tasks.TaskAction
 
 class BootstrapResourcesTask extends DefaultTask {
     ApplicationVariant applicationVariant
+    // visibleForTests
+    AndroidPublisher publisher
 
     @TaskAction
     def generate() {
-        def extension = PluginExtension.from(project)
-        if (!extension.isConfigured()) {
+        PluginExtension extension = PluginExtension.from(project)
+        try {
+            extension.isConfigured()
+        } catch (IllegalArgumentException e) {
+            logger.warn(e.message)
             return
         }
-        Logger log = project.logger
         File variantDir = new File(project.file(extension.resources.sourceDir), applicationVariant.name)
         if (!variantDir.mkdirs() && !variantDir.exists()) {
-            log.error("Unable create " + variantDir)
+            logger.error("Unable create " + variantDir)
             return
         }
         String packageName = applicationVariant.applicationId
-
-        AndroidPublisher.Edits edits = AndroidPublisherFactory.create(extension.serviceAccount).edits()
+        if (publisher == null) {
+            publisher = extension.googlePlay.serviceAccount.buildPublisher()
+        }
+        AndroidPublisher.Edits edits = publisher.edits()
         String editId = edits.insert(packageName, null).execute().getId();
 
         edits.listings().list(packageName, editId).execute().getListings().each { Listing listing ->
             File langDir = new File(variantDir, listing.getLanguage())
             if (!langDir.mkdir() && !langDir.exists()) {
-                log.error("Unable create " + langDir)
+                logger.error("Unable create " + langDir)
                 return
             }
             ["fullDescription", "shortDescription", "video", "title"].each {
@@ -47,7 +51,7 @@ class BootstrapResourcesTask extends DefaultTask {
             edits.apklistings().list(packageName, editId, versionCode).execute().getListings().each { ApkListing listing ->
                 File langDir = new File(variantDir, listing.getLanguage())
                 if (!langDir.mkdir() && !langDir.exists()) {
-                    log.error("Unable create " + langDir)
+                    logger.error("Unable create " + langDir)
                     return
                 }
                 new File(langDir, "recentChanges${releaseType.capitalize()}.txt") << listing.getRecentChanges()
@@ -55,6 +59,9 @@ class BootstrapResourcesTask extends DefaultTask {
         }
 
         String lang = edits.details().get(packageName, editId).execute().getDefaultLanguage();
+        if (lang == null || lang.isEmpty()) {
+            lang = "en-US"
+        }
         File defaultDir = new File(variantDir, lang)
         if (!defaultDir.mkdir() && !defaultDir.exists()) {
             return
@@ -71,7 +78,7 @@ class BootstrapResourcesTask extends DefaultTask {
 
             File imagesDir = new File(langDir, "images")
             if (!imagesDir.mkdir() && !imagesDir.exists()) {
-                log.error("Unable create " + imagesDir)
+                logger.error("Unable create " + imagesDir)
                 return
             }
             ["icon", "featureGraphic", "promoGraphic", "tvBanner"].each {
@@ -80,14 +87,14 @@ class BootstrapResourcesTask extends DefaultTask {
             }
             File screenShotsDir = new File(langDir, "screenshots")
             if (!screenShotsDir.mkdir() && !screenShotsDir.exists()) {
-                log.error("Unable create " + screenShotsDir)
+                logger.error("Unable create " + screenShotsDir)
                 return
             }
             ["phone", "sevenInch", "tenInch", "tv"].each {
                 File dir = new File(screenShotsDir, it)
                 if (!dir.exists()) {
                     if (!dir.mkdir() && !dir.exists()) {
-                        log.error("Unable create " + dir)
+                        logger.error("Unable create " + dir)
                         return
                     }
                     (1..8).each {

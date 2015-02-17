@@ -6,10 +6,8 @@ import com.google.api.services.androidpublisher.AndroidPublisher
 import com.google.api.services.androidpublisher.model.Apk
 import com.google.api.services.androidpublisher.model.Track
 import info.appsense.appstore.gradle.plugins.extension.PluginExtension
-import info.appsense.appstore.gradle.plugins.internal.AndroidPublisherFactory
 import org.apache.commons.io.FilenameUtils
 import org.gradle.api.DefaultTask
-import org.gradle.api.logging.Logger
 import org.gradle.api.tasks.TaskAction
 
 class PublishApplicationTask extends DefaultTask {
@@ -18,19 +16,21 @@ class PublishApplicationTask extends DefaultTask {
 
     @TaskAction
     def upload() {
-        def extension = PluginExtension.from(project)
-        if (!extension.isConfigured()) {
+        PluginExtension extension = PluginExtension.from(project)
+        try {
+            extension.isConfigured()
+        } catch (IllegalArgumentException e) {
+            logger.warn(e.message)
             return
         }
-        Logger log = project.logger
         File variantDir = new File(project.file(extension.resources.sourceDir), applicationVariant.name)
         if (!variantDir.exists()) {
-            log.error("Unable open " + variantDir)
+            logger.error("Unable open " + variantDir)
             return
         }
         String packageName = applicationVariant.applicationId
 
-        AndroidPublisher.Edits edits = AndroidPublisherFactory.create(extension.serviceAccount).edits()
+        AndroidPublisher.Edits edits = extension.getGooglePlay().getServiceAccount().buildPublisher().edits()
         String editId = edits.insert(packageName, null).execute().getId();
 
         List<Apk> apks = edits.apks().list(packageName, editId).execute().getApks()

@@ -148,7 +148,7 @@ appStoreDeploy {
         }
     }
     resources {
-        sourceDir = 'description'
+        sourceDir = 'store-resources'
     }
 }
 ```

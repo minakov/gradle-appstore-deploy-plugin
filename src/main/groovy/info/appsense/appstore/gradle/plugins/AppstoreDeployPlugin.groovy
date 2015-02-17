@@ -29,7 +29,7 @@ class AppStoreDeployPlugin implements Plugin<Project> {
         if (!project.plugins.hasPlugin(AppPlugin)) {
             throw new IllegalStateException("The 'android' plugin is required.")
         }
-        project.extensions.create(PluginExtension.PROPERTY_NAME, PluginExtension, project, instantiator)
+        project.extensions.create(PluginExtension.PROPERTY_NAME, PluginExtension, instantiator)
 
         def android = project.property('android') as AppExtension
         android.applicationVariants.all { ApplicationVariant variant ->

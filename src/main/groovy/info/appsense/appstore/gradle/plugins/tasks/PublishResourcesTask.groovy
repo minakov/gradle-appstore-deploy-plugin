@@ -6,11 +6,9 @@ import com.google.api.services.androidpublisher.AndroidPublisher
 import com.google.api.services.androidpublisher.model.Image
 import com.google.api.services.androidpublisher.model.Listing
 import info.appsense.appstore.gradle.plugins.extension.PluginExtension
-import info.appsense.appstore.gradle.plugins.internal.AndroidPublisherFactory
 import info.appsense.appstore.gradle.plugins.util.TextUtils
 import org.apache.commons.codec.digest.DigestUtils
 import org.gradle.api.DefaultTask
-import org.gradle.api.logging.Logger
 import org.gradle.api.tasks.TaskAction
 
 class PublishResourcesTask extends DefaultTask {
@@ -18,19 +16,21 @@ class PublishResourcesTask extends DefaultTask {
 
     @TaskAction
     def upload() {
-        def extension = PluginExtension.from(project)
-        if (!extension.isConfigured()) {
+        PluginExtension extension = PluginExtension.from(project)
+        try {
+            extension.isConfigured()
+        } catch (IllegalArgumentException e) {
+            logger.warn(e.message)
             return
         }
-        Logger log = project.logger
         File variantDir = new File(project.file(extension.resources.sourceDir), applicationVariant.name)
         if (!variantDir.exists()) {
-            log.error("Unable open " + variantDir)
+            logger.error("Unable open " + variantDir)
             return
         }
         String packageName = applicationVariant.applicationId
 
-        AndroidPublisher.Edits edits = AndroidPublisherFactory.create(extension.serviceAccount).edits()
+        AndroidPublisher.Edits edits = extension.getGooglePlay().getServiceAccount().buildPublisher().edits()
         String editId = edits.insert(packageName, null).execute().getId();
 
         variantDir.eachDir { File langDir ->
@@ -51,7 +51,7 @@ class PublishResourcesTask extends DefaultTask {
 
             File imagesDir = new File(langDir, "images")
             if (!imagesDir.exists()) {
-                log.lifecycle("Not found " + imagesDir)
+                logger.lifecycle("Not found " + imagesDir)
                 return
             }
             ["icon", "featureGraphic", "promoGraphic", "tvBanner"].each {
@@ -71,14 +71,14 @@ class PublishResourcesTask extends DefaultTask {
             }
             File screenShotsDir = new File(langDir, "screenshots")
             if (!screenShotsDir.exists()) {
-                log.lifecycle("Not found " + screenShotsDir)
+                logger.lifecycle("Not found " + screenShotsDir)
                 return
             }
             ["phone", "sevenInch", "tenInch", "tv"].each {
                 String imageType = "${it}Screenshots"
                 File dir = new File(screenShotsDir, it)
                 if (!dir.exists()) {
-                    log.error("Not found " + dir)
+                    logger.error("Not found " + dir)
                     return
                 }
                 HashedFile[] files = dir.listFiles().collect({ new HashedFile(it) })

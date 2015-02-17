@@ -9,7 +9,6 @@ import org.gradle.internal.reflect.Instantiator
  */
 class PluginExtension {
     public static final String PROPERTY_NAME = "appStoreDeploy"
-    private final Project project
     final GooglePlay googlePlay
     final Resources resources
 
@@ -17,10 +16,9 @@ class PluginExtension {
         return project.property(PROPERTY_NAME) as PluginExtension
     }
 
-    public PluginExtension(Project project, Instantiator instantiator) {
-        this.project = project
-        googlePlay = instantiator.newInstance(GooglePlay, project)
-        resources = instantiator.newInstance(Resources, project)
+    public PluginExtension(Instantiator instantiator) {
+        googlePlay = instantiator.newInstance(GooglePlay, instantiator)
+        resources = instantiator.newInstance(Resources)
     }
 
     void googlePlay(Action<GooglePlay> action) {
@@ -31,7 +29,8 @@ class PluginExtension {
         action.execute(resources)
     }
 
-    public boolean isConfigured() {
-        return googlePlay.isConfigured() && resources.isConfigured()
+    public void isConfigured() {
+        googlePlay.isConfigured()
+        resources.isConfigured()
     }
 }

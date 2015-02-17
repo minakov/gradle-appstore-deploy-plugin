@@ -3,21 +3,18 @@ package info.appsense.appstore.gradle.plugins.extension
 import info.appsense.appstore.gradle.plugins.extension.google.ReleaseStrategy
 import info.appsense.appstore.gradle.plugins.extension.google.ServiceAccount
 import org.gradle.api.Action
-import org.gradle.api.Project
 import org.gradle.internal.reflect.Instantiator
 
 /**
  * Extension for plugin config properties
  */
 class GooglePlay {
-    private final Project project
     final ReleaseStrategy releaseStrategy
     final ServiceAccount serviceAccount
 
-    public GooglePlay(Project project, Instantiator instantiator) {
-        this.project = project
-        releaseStrategy = instantiator.newInstance(ReleaseStrategy, project)
-        serviceAccount = instantiator.newInstance(ServiceAccount, project)
+    public GooglePlay(Instantiator instantiator) {
+        releaseStrategy = instantiator.newInstance(ReleaseStrategy)
+        serviceAccount = instantiator.newInstance(ServiceAccount)
     }
 
     void releaseStrategy(Action<ReleaseStrategy> action) {
@@ -28,7 +25,8 @@ class GooglePlay {
         action.execute(serviceAccount)
     }
 
-    public boolean isConfigured() {
-        return releaseStrategy.isConfigured() && serviceAccount.isConfigured()
+    public void isConfigured() {
+        releaseStrategy.isConfigured()
+        serviceAccount.isConfigured()
     }
 }
