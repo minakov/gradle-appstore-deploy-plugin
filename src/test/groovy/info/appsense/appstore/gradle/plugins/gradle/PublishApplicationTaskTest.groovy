@@ -1,8 +1,9 @@
 package info.appsense.appstore.gradle.plugins.gradle
 
+import com.google.api.client.http.FileContent
 import com.google.api.services.androidpublisher.AndroidPublisher
 import com.google.api.services.androidpublisher.model.*
-import info.appsense.appstore.gradle.plugins.tasks.BootstrapResourcesTask
+import info.appsense.appstore.gradle.plugins.tasks.PublishApplicationTask
 import org.gradle.api.Project
 import org.junit.Before
 import org.junit.Test
@@ -16,7 +17,7 @@ import static org.mockito.MockitoAnnotations.initMocks
 /**
  * Created by vladimir.minakov on 17.02.15.
  */
-class BootstrapResourcesTaskTest {
+class PublishApplicationTaskTest {
     @Mock
     AndroidPublisher publisher
     @Mock
@@ -41,6 +42,10 @@ class BootstrapResourcesTaskTest {
     AndroidPublisher.Edits.Tracks.List tracksList
     // TracksListResponse is final and not mockable
     TracksListResponse tracksListResponse = new TracksListResponse()
+    @Mock
+    AndroidPublisher.Edits.Tracks.Update tracksUpdate
+    // Track is final and not mockable
+    Track track = new Track()
 
     @Mock
     AndroidPublisher.Edits.Apklistings apkListings
@@ -55,6 +60,17 @@ class BootstrapResourcesTaskTest {
     AndroidPublisher.Edits.Details.Get detailsGet
     // ListingsListResponse is final and not mockable
     AppDetails appDetails = new AppDetails()
+
+    @Mock
+    AndroidPublisher.Edits.Apks apks
+    @Mock
+    AndroidPublisher.Edits.Apks.List apksList
+    // ApksListResponse is final and not mockable
+    ApksListResponse apksListResponse = new ApksListResponse()
+    @Mock
+    AndroidPublisher.Edits.Apks.Upload apksUpload
+    // Apk is final and not mockable
+    Apk apk
 
     @Before
     public void setup() {
@@ -73,11 +89,19 @@ class BootstrapResourcesTaskTest {
 
         doReturn(tracks).when(edits).tracks()
         doReturn(tracksList).when(tracks).list(anyString(), anyString())
+        doReturn(tracksUpdate).when(tracks).update(anyString(), anyString(), anyString(), any(Track))
         doReturn(tracksListResponse).when(tracksList).execute()
+        doReturn(track).when(tracksUpdate).execute()
 
         doReturn(apkListings).when(edits).apklistings()
         doReturn(apkListingsList).when(apkListings).list(anyString(), anyString(), anyInt())
         doReturn(apkListingsListResponse).when(apkListingsList).execute()
+
+        doReturn(apks).when(edits).apks()
+        doReturn(apksList).when(apks).list(anyString(), anyString())
+        doReturn(apksUpload).when(apks).upload(anyString(), anyString(), any(FileContent))
+        doReturn(apksListResponse).when(apksList).execute()
+        doReturn(apk).when(apksUpload).execute()
 
         doReturn(details).when(edits).details()
         doReturn(detailsGet).when(details).get(anyString(), anyString())
@@ -97,9 +121,9 @@ class BootstrapResourcesTaskTest {
         }
         project.evaluate()
 
-        BootstrapResourcesTask task = project.tasks.generateGooglePlayResourcesRelease as BootstrapResourcesTask
+        PublishApplicationTask task = project.tasks.publishGooglePlayBetaApplicationRelease as PublishApplicationTask
         task.publisher = publisher
-        task.generate()
+        task.upload()
 
         verify(edits).insert("com.example", null)
     }

@@ -13,6 +13,8 @@ import org.gradle.api.tasks.TaskAction
 
 class PublishResourcesTask extends DefaultTask {
     ApplicationVariant applicationVariant
+    // visibleForTests
+    AndroidPublisher publisher
 
     @TaskAction
     def upload() {
@@ -29,13 +31,15 @@ class PublishResourcesTask extends DefaultTask {
             return
         }
         String packageName = applicationVariant.applicationId
-
-        AndroidPublisher.Edits edits = extension.getGooglePlay().getServiceAccount().buildPublisher().edits()
+        if (publisher == null) {
+            publisher = extension.googlePlay.serviceAccount.buildPublisher()
+        }
+        AndroidPublisher.Edits edits = publisher.edits()
         String editId = edits.insert(packageName, null).execute().getId();
 
         variantDir.eachDir { File langDir ->
             String lang = langDir.name
-            Listing listing = edits.listings().get(packageName, editId, lang).execute();
+            Listing listing = edits.listings().get(packageName, editId, lang).execute()
 
             boolean dirty = false
             ["fullDescription", "shortDescription", "video", "title"].each {
@@ -48,7 +52,6 @@ class PublishResourcesTask extends DefaultTask {
             if (dirty) {
                 edits.listings().update(packageName, editId, lang, listing).execute();
             }
-
             File imagesDir = new File(langDir, "images")
             if (!imagesDir.exists()) {
                 logger.lifecycle("Not found " + imagesDir)
@@ -81,21 +84,22 @@ class PublishResourcesTask extends DefaultTask {
                     logger.error("Not found " + dir)
                     return
                 }
-                HashedFile[] files = dir.listFiles().collect({ new HashedFile(it) })
+
+                HashedFile[] files = dir.listFiles().collect { new HashedFile(it) }
                 if (files.length > 0) {
-                    List<Image> images = edits.images().list(packageName, editId, lang, imageType).execute().getImages();
+                    final List<Image> images = edits.images().list(packageName, editId, lang, imageType).execute().getImages();
                     // Remove images not found locally
                     int deleted = images.findAll { Image image ->
-                        files.count {
+                        files.collect().count {
                             image.getSha1().equals(it.hash)
                         } == 0
                     }.each {
                         edits.images().delete(packageName, editId, lang, imageType, it.getId()).execute()
-                    }.count { true };
+                    }.collect().count { true };
 
                     // Upload images not found remotely
                     files.findAll { HashedFile file ->
-                        images.count {
+                        images.collect().count {
                             file.hash.equals(it.getSha1())
                         } == 0
                     }.sort {

@@ -13,6 +13,8 @@ import org.gradle.api.tasks.TaskAction
 class PublishApplicationTask extends DefaultTask {
     ApplicationVariant applicationVariant
     String releaseType
+    // visibleForTests
+    AndroidPublisher publisher
 
     @TaskAction
     def upload() {
@@ -29,14 +31,16 @@ class PublishApplicationTask extends DefaultTask {
             return
         }
         String packageName = applicationVariant.applicationId
-
-        AndroidPublisher.Edits edits = extension.getGooglePlay().getServiceAccount().buildPublisher().edits()
+        if (publisher == null) {
+            publisher = extension.googlePlay.serviceAccount.buildPublisher()
+        }
+        AndroidPublisher.Edits edits = publisher.edits()
         String editId = edits.insert(packageName, null).execute().getId();
 
         List<Apk> apks = edits.apks().list(packageName, editId).execute().getApks()
         applicationVariant.outputs.findAll {
             def versionCode = it.getVersionCode()
-            apks.count {
+            apks.collect().count {
                 it.getVersionCode().equals(versionCode)
             } == 0
         }.findAll {
@@ -49,13 +53,13 @@ class PublishApplicationTask extends DefaultTask {
         // Remove current versionCodes from the existing track
         edits.tracks().list(packageName, editId).execute().getTracks().findAll { Track track ->
             track.getVersionCodes().findAll { Integer versionCode ->
-                applicationVariant.outputs.count {
+                applicationVariant.outputs.collect().count {
                     it.getVersionCode() == versionCode
                 } > 0
             }
         }.each { Track track ->
             track.setVersionCodes(track.getVersionCodes().findAll { Integer versionCode ->
-                applicationVariant.outputs.count {
+                applicationVariant.outputs.collect().count {
                     it.getVersionCode() == versionCode
                 } == 0
             }.collect());

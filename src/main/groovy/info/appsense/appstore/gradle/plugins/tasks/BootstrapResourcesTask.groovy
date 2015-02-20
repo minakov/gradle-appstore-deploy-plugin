@@ -46,15 +46,17 @@ class BootstrapResourcesTask extends DefaultTask {
             }
         }
         edits.tracks().list(packageName, editId).execute().getTracks().each { Track track ->
-            String releaseType = track.getTrack().toLowerCase()
+            String releaseType = track.getTrack()?.toLowerCase()
             Integer versionCode = track.getVersionCodes().sort().last()
-            edits.apklistings().list(packageName, editId, versionCode).execute().getListings().each { ApkListing listing ->
-                File langDir = new File(variantDir, listing.getLanguage())
-                if (!langDir.mkdir() && !langDir.exists()) {
-                    logger.error("Unable create " + langDir)
-                    return
+            if (releaseType != null && versionCode != null) {
+                edits.apklistings().list(packageName, editId, versionCode).execute().getListings().each { ApkListing listing ->
+                    File langDir = new File(variantDir, listing.getLanguage())
+                    if (!langDir.mkdir() && !langDir.exists()) {
+                        logger.error("Unable create " + langDir)
+                        return
+                    }
+                    new File(langDir, "recentChanges${releaseType.capitalize()}.txt") << listing.getRecentChanges()
                 }
-                new File(langDir, "recentChanges${releaseType.capitalize()}.txt") << listing.getRecentChanges()
             }
         }
 
