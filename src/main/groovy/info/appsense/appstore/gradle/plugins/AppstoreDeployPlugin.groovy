@@ -1,37 +1,26 @@
 package info.appsense.appstore.gradle.plugins
 
 import com.android.build.gradle.AppExtension
-import com.android.build.gradle.AppPlugin
 import com.android.build.gradle.api.ApplicationVariant
-import info.appsense.appstore.gradle.plugins.extension.PluginExtension
 import info.appsense.appstore.gradle.plugins.tasks.BootstrapResourcesTask
 import info.appsense.appstore.gradle.plugins.tasks.PublishApplicationTask
 import info.appsense.appstore.gradle.plugins.tasks.PublishResourcesTask
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import org.gradle.internal.reflect.Instantiator
-
-import javax.inject.Inject
 
 /**
  * Created by vladimir.minakov on 16.02.15.
  */
 class AppStoreDeployPlugin implements Plugin<Project> {
     private final static String GROUP_NAME = 'AppStore'
-    Instantiator instantiator
-
-    @Inject
-    public AppStoreDeployPlugin(Instantiator instantiator) {
-        this.instantiator = instantiator
-    }
 
     void apply(Project project) {
-        if (!project.plugins.hasPlugin(AppPlugin)) {
-            throw new IllegalStateException("The 'android' plugin is required.")
-        }
-        project.extensions.create(PluginExtension.PROPERTY_NAME, PluginExtension, instantiator)
-
         def android = project.property('android') as AppExtension
+        if (!android) {
+            throw new IllegalStateException("The 'com.android.application' plugin is required.")
+        }
+        project.extensions.create(AppStoreDeployExtension.NAME, AppStoreDeployExtension)
+
         android.applicationVariants.all { ApplicationVariant variant ->
             if (variant.buildType.isDebuggable()) {
                 return
@@ -60,5 +49,4 @@ class AppStoreDeployPlugin implements Plugin<Project> {
             }
         }
     }
-
 }
