@@ -4,17 +4,17 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.github.ben-manes:gradle-versions-plugin:0.7'
+        classpath 'com.github.ben-manes:gradle-versions-plugin:0.8'
+        classpath 'nu.studer:gradle-plugindev-plugin:1.0.3'
     }
 }
 
 apply plugin: 'groovy'
-apply plugin: 'maven'
 apply plugin: 'com.github.ben-manes.versions'
+apply plugin: 'nu.studer.plugindev'
 
-group = 'info.appsense.gradle'
-version = '0.0.9'
-ext.packaging = 'jar'
+group = 'info.appsense'
+version = '0.0.5'
 
 dependencies {
     repositories {
@@ -26,70 +26,53 @@ dependencies {
     compile localGroovy()
     compile gradleApi()
 
-    compile 'com.google.apis:google-api-services-androidpublisher:v2-rev14-1.19.1'
-    compile 'com.android.tools.build:gradle:1.0.1'
     compile 'commons-io:commons-io:2.4'
+    compile 'com.android.tools.build:gradle:1.1.0'
+    compile 'com.google.apis:google-api-services-androidpublisher:v2-rev15-1.19.1'
 
     testCompile 'junit:junit:4.12'
-    testCompile 'org.mockito:mockito-all:1.9.5'
-    testCompile 'org.hamcrest:hamcrest-library:1.3'
+    testCompile 'org.mockito:mockito-all:2.0.2-beta'
+    testCompile 'org.hamcrest:hamcrest-library:1.4-atlassian-1'
 }
 
-task sourcesJar(type: Jar) {
-    classifier = 'sources'
-    from sourceSets.main.allSource
+javadoc {
+    exclude '**/internal/**'
 }
 
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
-    from 'build/docs/javadoc'
+//test {
+//    testLogging.showStandardStreams = true
+//}
+
+plugindev {
+    pluginImplementationClass 'info.appsense.appstore.gradle.plugins.AppStoreDeployPlugin'
+
+    pluginDescription 'A Gradle plugin which enables publish for application stores.'
+    pluginTags 'gradle', 'plugin', 'android', 'androidpublisher', 'play'
+    pluginLicenses 'Apache-2.0'
+
+    authorId 'appsense'
+    authorName 'appsense.info'
+    authorEmail 'gradle@appsense.info'
+
+    projectUrl 'https://github.com/minakov/gradle-appstore-deploy-plugin'
+    projectInceptionYear '2015'
+
+    done() // do not omit this
 }
 
-artifacts {
-    archives jar
-    archives javadocJar
-    archives sourcesJar
+bintray {
+    user = getProperty('BINTRAY_USER') ?: ""
+    key = getProperty('BINTRAY_PASSWORD') ?: ""
+
+    pkg {
+        userOrg = 'appsense'
+        repo = 'gradle-plugins'
+        version {
+            attributes = ['gradle-plugin': 'info.appsense.appstore:info.appsense:gradle-appstore-deploy-plugin']
+        }
+    }
 }
 
 task wrapper(type: Wrapper) {
     gradleVersion = '2.2.1'
-}
-
-install.repositories.mavenInstaller {
-    pom.project(pomConfiguration)
-}
-
-test {
-    testLogging.showStandardStreams = true
-}
-
-/**v
- * Create POM config and return for use by other tasks.
- */
-def getPomConfiguration() {
-    return {
-        name 'Gradle HockeyApp Plugin'
-        packaging 'jar'
-        description 'A Gradle plugin which enables publish for application stores.'
-        url 'https://github.com/minakov/gradle-appstore-deploy-plugin'
-        licenses {
-            license {
-                name = 'The Apache Software License, Version 2.0'
-                url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-                distribution = 'repo'
-            }
-        }
-        developers {
-            developer {
-                id 'minakov'
-                name = 'Vladimir Minakov'
-                email 'minakov@gmail.com'
-            }
-        }
-        scm {
-            connection 'scm:https://github.com/minakov/gradle-appstore-deploy-plugin'
-            developerConnection 'scm:git@github.com:minakov/gradle-appstore-deploy-plugin.git'
-            url 'https://github.com/minakov/gradle-appstore-deploy-plugin'
-        }
-    }
 }

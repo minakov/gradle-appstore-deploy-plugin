@@ -5,7 +5,7 @@ import com.google.api.client.http.FileContent
 import com.google.api.services.androidpublisher.AndroidPublisher
 import com.google.api.services.androidpublisher.model.Apk
 import com.google.api.services.androidpublisher.model.Track
-import info.appsense.appstore.gradle.plugins.extension.PluginExtension
+import info.appsense.appstore.gradle.plugins.AppStoreDeployExtension
 import org.apache.commons.io.FilenameUtils
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.TaskAction
@@ -18,7 +18,7 @@ class PublishApplicationTask extends DefaultTask {
 
     @TaskAction
     def upload() {
-        PluginExtension extension = PluginExtension.from(project)
+        AppStoreDeployExtension extension = AppStoreDeployExtension.from(project)
         try {
             extension.isConfigured()
         } catch (IllegalArgumentException e) {

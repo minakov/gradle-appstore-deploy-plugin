@@ -5,7 +5,7 @@ import com.google.api.client.http.FileContent
 import com.google.api.services.androidpublisher.AndroidPublisher
 import com.google.api.services.androidpublisher.model.Image
 import com.google.api.services.androidpublisher.model.Listing
-import info.appsense.appstore.gradle.plugins.extension.PluginExtension
+import info.appsense.appstore.gradle.plugins.AppStoreDeployExtension
 import info.appsense.appstore.gradle.plugins.util.TextUtils
 import org.apache.commons.codec.digest.DigestUtils
 import org.gradle.api.DefaultTask
@@ -18,7 +18,7 @@ class PublishResourcesTask extends DefaultTask {
 
     @TaskAction
     def upload() {
-        PluginExtension extension = PluginExtension.from(project)
+        AppStoreDeployExtension extension = AppStoreDeployExtension.from(project)
         try {
             extension.isConfigured()
         } catch (IllegalArgumentException e) {

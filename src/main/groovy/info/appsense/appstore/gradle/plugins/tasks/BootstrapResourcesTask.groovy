@@ -5,7 +5,7 @@ import com.google.api.services.androidpublisher.AndroidPublisher
 import com.google.api.services.androidpublisher.model.ApkListing
 import com.google.api.services.androidpublisher.model.Listing
 import com.google.api.services.androidpublisher.model.Track
-import info.appsense.appstore.gradle.plugins.extension.PluginExtension
+import info.appsense.appstore.gradle.plugins.AppStoreDeployExtension
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.TaskAction
 
@@ -16,7 +16,7 @@ class BootstrapResourcesTask extends DefaultTask {
 
     @TaskAction
     def generate() {
-        PluginExtension extension = PluginExtension.from(project)
+        AppStoreDeployExtension extension = AppStoreDeployExtension.from(project)
         try {
             extension.isConfigured()
         } catch (IllegalArgumentException e) {

@@ -1,5 +1,7 @@
 # gradle-appstore-deploy-plugin
 
+[ ![Download](https://api.bintray.com/packages/appsense/gradle-plugins/gradle-appstore-deploy-plugin/images/download.svg) ](https://bintray.com/appsense/gradle-plugins/gradle-appstore-deploy-plugin/_latestVersion)
+
 Gradle Plugin for upload Android applications and application details to the [Google Play Store](https://play.google.com/store)
 
 ## Applying plugin
@@ -10,7 +12,7 @@ In whichever `build.gradle` file.
 
 ```gradle
 plugins {
-  id 'appstore.deploy' version '0.0.1'
+  id 'info.appsense.appstore' version '0.0.1'
 }
 ```
 
@@ -23,11 +25,10 @@ Note: exact version number must be specified, `+` cannot be used as wildcard.
 ```gradle
  buildscript {
     repositories {
-        mavenCentral()
         jcenter()
     }
     dependencies {
-        classpath 'info.appsense.gradle:gradle-appstore-deploy-plugin:0.0.1'
+        classpath 'info.appsense:gradle-appstore-deploy-plugin:0.0.1'
     }
 }
 ```
@@ -37,7 +38,7 @@ Note: `mavenCentral()` and/or `jcenter()` repository can be specified, `+` can b
 2. Apply plugin and add configuration to `build.gradle` of the application, eg:
 
 ```gradle
-apply plugin: 'appstore.deploy'
+apply plugin: 'info.appsense.appstore'
 ```
 
 ## Usage
@@ -153,11 +154,9 @@ appStoreDeploy {
 }
 ```
 
-
 ## Dependencies
 
 Needs the ```com.android.application``` plugin applied. Supports the Android Application Plugin as of version ```1.0.0```.
-
 
 ## License
 

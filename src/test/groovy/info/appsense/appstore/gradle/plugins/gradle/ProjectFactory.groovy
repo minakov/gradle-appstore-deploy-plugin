@@ -9,7 +9,7 @@ public class ProjectFactory {
     public static Project build() {
         Project project = ProjectBuilder.builder().withProjectDir(new File(FIXTURES)).build();
         project.apply plugin: 'com.android.application'
-        project.apply plugin: 'appstore.deploy'
+        project.apply plugin: 'info.appsense.appstore'
         project.android {
             compileSdkVersion 21
             buildToolsVersion '21.1.0'
