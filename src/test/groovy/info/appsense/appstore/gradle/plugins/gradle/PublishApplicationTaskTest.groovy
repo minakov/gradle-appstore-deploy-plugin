@@ -108,7 +108,6 @@ class PublishApplicationTaskTest {
         doReturn(detailsGet).when(details).get(anyString(), anyString())
         doReturn(appDetails).when(detailsGet).execute()
 
-
         new File(new File(ProjectFactory.FIXTURES, "store-resources"), "release").mkdirs()
     }
 
