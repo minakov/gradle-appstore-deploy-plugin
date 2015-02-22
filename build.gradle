@@ -66,8 +66,6 @@ plugindev {
 }
 
 bintray {
-    user = getProperty('BINTRAY_USER') ?: ""
-    key = getProperty('BINTRAY_PASSWORD') ?: ""
     dryRun = true
 
     pkg {
