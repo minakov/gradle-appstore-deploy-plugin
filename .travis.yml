@@ -2,23 +2,26 @@ language: android
 
 android:
   components:
-    - build-tools-21.1.2
-    - android-21
+  - build-tools-21.1.2
+  - android-21
   licenses:
-    - android-sdk-license-5be876d5
+  - android-sdk-license-5be876d5
 
 jdk:
-  - oraclejdk7
-  - oraclejdk8
+- oraclejdk7
+- oraclejdk8
 
 script:
-  - ./gradlew clean check
+- ./gradlew clean check
 
 notifications:
   email: false
 
-sudo: false
-
 cache:
   directories:
-    - $HOME/.gradle
+  - $HOME/.gradle
+
+env:
+  global:
+  - secure: wHOw9u5MzTKcoBSLBxkiAad064Go7bUxtnEcFuDWpE4LdJQ8/t3bHuOZQ78Qt8oM2a8FBSER28y3zCTm/icX6vQZqAhHtMEqWHIPNVR+rgVii+PZ4N0/2sxzHtRDksdflxsv2hBNFS6g4rB6OF/qztaj1G7XwKm7HaJFPEP/C/g=
+  - secure: NPmJEb1+u8/r1jWA0LAFE8LiWlX9XpxIzZo8t+NSBBPrYuwV+y0I3HJdywL6JmpgFC//Al7kum5Va/nBfYDqyIOfbQxdP5Bh5LTNw4mixVpeCH+7gxupltiabkqLh0os/j9jC5ylGx28em7EyeYKd6Fhq3LMf+JsyezEwvquJAQ=
