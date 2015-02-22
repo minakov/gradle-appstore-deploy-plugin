@@ -13,8 +13,13 @@ apply plugin: 'groovy'
 apply plugin: 'com.github.ben-manes.versions'
 apply plugin: 'nu.studer.plugindev'
 
+compileGroovy {
+    sourceCompatibility = 1.7
+    targetCompatibility = 1.7
+}
+
 group = 'info.appsense'
-version = '0.0.5'
+version = '0.0.8'
 
 dependencies {
     repositories {
@@ -27,7 +32,7 @@ dependencies {
     compile gradleApi()
 
     compile 'commons-io:commons-io:2.4'
-    compile 'com.android.tools.build:gradle:1.1.0'
+    compile 'com.android.tools.build:gradle:1.0.0'
     compile 'com.google.apis:google-api-services-androidpublisher:v2-rev15-1.19.1'
 
     testCompile 'junit:junit:4.12'
@@ -63,6 +68,7 @@ plugindev {
 bintray {
     user = getProperty('BINTRAY_USER') ?: ""
     key = getProperty('BINTRAY_PASSWORD') ?: ""
+    dryRun = true
 
     pkg {
         userOrg = 'appsense'

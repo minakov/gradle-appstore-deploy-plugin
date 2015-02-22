@@ -1,6 +1,7 @@
 # gradle-appstore-deploy-plugin
 
-[ ![Download](https://api.bintray.com/packages/appsense/gradle-plugins/gradle-appstore-deploy-plugin/images/download.svg) ](https://bintray.com/appsense/gradle-plugins/gradle-appstore-deploy-plugin/_latestVersion)
+[![Build Status](https://travis-ci.org/minakov/gradle-appstore-deploy-plugin.svg)](https://travis-ci.org/minakov/gradle-appstore-deploy-plugin)
+[![Download](https://api.bintray.com/packages/appsense/gradle-plugins/gradle-appstore-deploy-plugin/images/download.svg) ](https://bintray.com/appsense/gradle-plugins/gradle-appstore-deploy-plugin/_latestVersion)
 
 Gradle Plugin for upload Android applications and application details to the [Google Play Store](https://play.google.com/store)
 
