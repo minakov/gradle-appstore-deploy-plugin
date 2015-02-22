@@ -22,7 +22,7 @@ class PublishApplicationTask extends DefaultTask {
         try {
             extension.isConfigured()
         } catch (IllegalArgumentException e) {
-            logger.warn(e.message)
+            logger.error(e.message)
             return
         }
         File variantDir = new File(project.file(extension.resources.sourceDir), applicationVariant.name)

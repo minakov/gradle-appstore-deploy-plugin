@@ -44,9 +44,9 @@ javadoc {
     exclude '**/internal/**'
 }
 
-//test {
-//    testLogging.showStandardStreams = true
-//}
+test {
+    testLogging.showStandardStreams = true
+}
 
 plugindev {
     pluginImplementationClass 'info.appsense.appstore.gradle.plugins.AppStoreDeployPlugin'
