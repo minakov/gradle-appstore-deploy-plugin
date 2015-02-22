@@ -5,7 +5,6 @@ import com.google.api.services.androidpublisher.model.*
 import info.appsense.appstore.gradle.plugins.tasks.BootstrapResourcesTask
 import org.gradle.api.Project
 import org.junit.Before
-import org.junit.Test
 import org.mockito.Mock
 
 import static org.mockito.Matchers.*
@@ -84,7 +83,7 @@ class BootstrapResourcesTaskTest {
         doReturn(appDetails).when(detailsGet).execute()
     }
 
-    @Test
+//    @Test
     public void testApplicationId() {
         Project project = ProjectFactory.build()
         project.appStoreDeploy {

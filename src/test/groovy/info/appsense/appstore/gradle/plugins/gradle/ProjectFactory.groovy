@@ -4,7 +4,7 @@ import org.gradle.api.Project
 import org.gradle.testfixtures.ProjectBuilder
 
 public class ProjectFactory {
-    private static final String FIXTURES = "src/test/fixtures/android_app"
+    static final String FIXTURES = "src/test/fixtures/android_app"
 
     public static Project build() {
         Project project = ProjectBuilder.builder().withProjectDir(new File(FIXTURES)).build();

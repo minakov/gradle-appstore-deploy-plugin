@@ -5,6 +5,7 @@ import com.google.api.services.androidpublisher.AndroidPublisher
 import com.google.api.services.androidpublisher.model.*
 import info.appsense.appstore.gradle.plugins.tasks.PublishApplicationTask
 import org.gradle.api.Project
+import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
@@ -106,6 +107,14 @@ class PublishApplicationTaskTest {
         doReturn(details).when(edits).details()
         doReturn(detailsGet).when(details).get(anyString(), anyString())
         doReturn(appDetails).when(detailsGet).execute()
+
+
+        new File(new File(ProjectFactory.FIXTURES, "store-resources"), "release").mkdirs()
+    }
+
+    @After
+    public void destroy() {
+        new File(ProjectFactory.FIXTURES, "store-resources").delete()
     }
 
     @Test
