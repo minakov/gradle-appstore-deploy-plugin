@@ -21,7 +21,7 @@ Note: exact version number must be specified, `+` cannot be used as wildcard.
 
 ### All versions of Gradle
 
-1. Add dependency to the __top-level__ `build.gradle` file.
+Add dependency to the __top-level__ `build.gradle` file.
 
 ```gradle
  buildscript {
@@ -36,7 +36,7 @@ Note: exact version number must be specified, `+` cannot be used as wildcard.
 
 Note: `mavenCentral()` and/or `jcenter()` repository can be specified, `+` can be used as wildcard in version number.
 
-2. Apply plugin and add configuration to `build.gradle` of the application, eg:
+Apply plugin and add configuration to `build.gradle` of the application, eg:
 
 ```gradle
 apply plugin: 'info.appsense.appstore'
@@ -82,7 +82,7 @@ and generate the required files and folders.
                             ..
                             8.png
 ```
-*Note: Currently the API not supports downloading the play store graphics. Task created empty files for the image.*
+*Note: Currently the API not supports downloading the play store graphics. Task creates empty files for the image.*
 
 Running the `publishGooglePlayAlphaApplication<Variant Name>`, `publishGooglePlayBetaApplication<Variant Name>`
 or `publishGooglePlayProductionApplication<Variant Name>` task will upload an APKs to alpha, beta and production tracks.
