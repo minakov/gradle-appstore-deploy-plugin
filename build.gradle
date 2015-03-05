@@ -13,11 +13,6 @@ apply plugin: 'groovy'
 apply plugin: 'com.github.ben-manes.versions'
 apply plugin: 'nu.studer.plugindev'
 
-compileGroovy {
-    sourceCompatibility = 1.7
-    targetCompatibility = 1.7
-}
-
 group = 'info.appsense'
 version = '0.0.8'
 
@@ -33,7 +28,7 @@ dependencies {
 
     compile 'commons-io:commons-io:2.4'
     compile 'com.android.tools.build:gradle:1.0.0'
-    compile 'com.google.apis:google-api-services-androidpublisher:v2-rev15-1.19.1'
+    compile 'com.google.apis:google-api-services-androidpublisher:v2-rev16-1.19.1'
 
     testCompile 'junit:junit:4.12'
     testCompile 'org.mockito:mockito-all:2.0.2-beta'
@@ -49,6 +44,7 @@ test {
 }
 
 plugindev {
+    pluginId 'info.appsense.appstore'
     pluginImplementationClass 'info.appsense.appstore.gradle.plugins.AppStoreDeployPlugin'
 
     pluginDescription 'A Gradle plugin which enables publish for application stores.'
@@ -67,13 +63,9 @@ plugindev {
 
 bintray {
     dryRun = true
-
     pkg {
         userOrg = 'appsense'
         repo = 'gradle-plugins'
-        version {
-            attributes = ['gradle-plugin': 'info.appsense.appstore:info.appsense:gradle-appstore-deploy-plugin']
-        }
     }
 }
 
