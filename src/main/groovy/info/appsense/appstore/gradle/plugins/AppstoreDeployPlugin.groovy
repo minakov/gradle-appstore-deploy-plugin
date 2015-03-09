@@ -11,7 +11,7 @@ import org.gradle.api.Project
 /**
  * Created by vladimir.minakov on 16.02.15.
  */
-class AppStoreDeployPlugin implements Plugin<Project> {
+class AppstoreDeployPlugin implements Plugin<Project> {
     private final static String GROUP_NAME = 'AppStore'
 
     void apply(Project project) {
