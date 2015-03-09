@@ -14,7 +14,7 @@ apply plugin: 'com.github.ben-manes.versions'
 apply plugin: 'nu.studer.plugindev'
 
 group = 'info.appsense'
-version = '0.0.8'
+version = '0.0.25'
 
 dependencies {
     repositories {
@@ -28,7 +28,9 @@ dependencies {
 
     compile 'commons-io:commons-io:2.4'
     compile 'com.android.tools.build:gradle:1.0.0'
-    compile 'com.google.apis:google-api-services-androidpublisher:v2-rev16-1.19.1'
+    compile('com.google.apis:google-api-services-androidpublisher:v2-rev13-1.19.0') {
+        exclude group: 'com.google.guava', module: 'guava-jdk5'
+    }
 
     testCompile 'junit:junit:4.12'
     testCompile 'org.mockito:mockito-all:2.0.2-beta'
@@ -45,7 +47,7 @@ test {
 
 plugindev {
     pluginId 'info.appsense.appstore'
-    pluginImplementationClass 'info.appsense.appstore.gradle.plugins.AppStoreDeployPlugin'
+    pluginImplementationClass 'info.appsense.appstore.gradle.plugins.AppstoreDeployPlugin'
 
     pluginDescription 'A Gradle plugin which enables publish for application stores.'
     pluginTags 'gradle', 'plugin', 'android', 'androidpublisher', 'play'
