@@ -13,7 +13,7 @@ In whichever `build.gradle` file.
 
 ```gradle
 plugins {
-  id 'info.appsense.appstore' version '0.0.1'
+  id 'info.appsense.appstore' version '0.0.25'
 }
 ```
 
@@ -29,7 +29,7 @@ Add dependency to the __top-level__ `build.gradle` file.
         jcenter()
     }
     dependencies {
-        classpath 'info.appsense:gradle-appstore-deploy-plugin:0.0.1'
+        classpath 'info.appsense:gradle-appstore-deploy-plugin:0.0.25'
     }
 }
 ```
