@@ -64,7 +64,9 @@ plugindev {
 }
 
 bintray {
-    dryRun = true
+    dryRun = false
+    user = bintrayUser
+    key = bintrayApiKey
     pkg {
         userOrg = 'appsense'
         repo = 'gradle-plugins'
