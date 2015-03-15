@@ -1,27 +1,21 @@
 language: android
-
 android:
   components:
   - build-tools-21.1.2
   - android-21
   licenses:
   - android-sdk-license-5be876d5
-
 jdk:
 - oraclejdk7
 - oraclejdk8
-
 script:
-- ./gradlew clean check
-
+- ./gradlew clean build
 notifications:
   email: false
-
 cache:
   directories:
   - $HOME/.gradle
-
 env:
   global:
-  - secure: wHOw9u5MzTKcoBSLBxkiAad064Go7bUxtnEcFuDWpE4LdJQ8/t3bHuOZQ78Qt8oM2a8FBSER28y3zCTm/icX6vQZqAhHtMEqWHIPNVR+rgVii+PZ4N0/2sxzHtRDksdflxsv2hBNFS6g4rB6OF/qztaj1G7XwKm7HaJFPEP/C/g=
-  - secure: NPmJEb1+u8/r1jWA0LAFE8LiWlX9XpxIzZo8t+NSBBPrYuwV+y0I3HJdywL6JmpgFC//Al7kum5Va/nBfYDqyIOfbQxdP5Bh5LTNw4mixVpeCH+7gxupltiabkqLh0os/j9jC5ylGx28em7EyeYKd6Fhq3LMf+JsyezEwvquJAQ=
+  - secure: a1oBW/5jhKOJkb8J8wOyHnLN0HXDvbkqUYGghuUV+IsrrALGi0rcg4606ZYkm3vJWHHKx8E348J4iAk8XkBS+EFZYH0jEJds0vZBp+v4MG6BubKe63IXbtbLj/F/8rykLgZxUfF7vRB2lSFW3BPbnbxMJ2JmSgiPOE9QIP8sxHM=
+  - secure: ls6DBQy9+3uEc++jFTf9hqAYYWre/eE4STsbkt7BSO6iV/d0Je2HMuHqsJUgBgtFIqoLomGxPSMcr73ZsKxeR848reRYv9+Si12xGfjWnNM8UhG8tFHOnja62f0Wel+WoHM0AJ0WrR1g4d5/TUpG8sTXd4+fXlSGvfv5GX4xz6w=
