@@ -14,7 +14,7 @@ apply plugin: 'com.github.ben-manes.versions'
 apply plugin: 'nu.studer.plugindev'
 
 group = 'info.appsense'
-version = '0.0.25'
+version = '0.0.26'
 
 dependencies {
     repositories {

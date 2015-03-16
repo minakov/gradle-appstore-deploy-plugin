@@ -127,8 +127,20 @@ Add to your build.gradle
 appStoreDeploy {
     googlePlay {
         serviceAccount {
-            email = 'your-service-account-email'
-            storeFile = file('key.p12')
+            clientEmail = 'your-service-account-client_id'
+            keyStoreFile file('key.p12')
+        }
+    }
+}
+```
+
+```gradle
+appStoreDeploy {
+    googlePlay {
+        serviceAccount {
+            clientEmail = 'your-service-account-client_id'
+            privateKeyId = 'your-service-account-private_key_id'
+            privateKeyPem = 'your-service-account-private_key'
         }
     }
 }
@@ -142,11 +154,13 @@ Add to your build.gradle
 appStoreDeploy {
     googlePlay {
         serviceAccount {
-            email = 'your-service-account-email'
-            storeFile = file('key.p12')
-            storePassword = 'notasecret'
-            keyAlias = 'privatekey'
-            keyPassword = 'notasecret'
+            clientEmail = 'your-service-account-client_email'
+            keyStore {
+                file = file('key.p12')
+                storePassword = 'notasecret'
+                keyAlias = 'privatekey'
+                keyPassword = 'notasecret'
+            }
         }
     }
     resources {

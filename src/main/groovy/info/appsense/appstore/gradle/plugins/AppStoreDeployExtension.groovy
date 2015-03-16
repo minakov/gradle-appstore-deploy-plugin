@@ -71,28 +71,63 @@ class AppStoreDeployExtension {
     }
 
     class ServiceAccountConfig {
-        def String email;
-        def File storeFile;
+        def String clientEmail;
+        def File keyStoreFile;
+        def KeyStoreConfig keyStore = new KeyStoreConfig()
+        def String privateKeyId;
+        def String privateKeyPem;
+
+        public AndroidPublisher buildPublisher() {
+            def AndroidPublisherBuilder builder = new AndroidPublisherBuilder()
+                    .setClientEmail(clientEmail)
+                    .setStorePassword(keyStore.storePassword)
+                    .setAlias(keyStore.keyAlias)
+                    .setKeyPassword(keyStore.keyPassword)
+
+            if (keyStoreFile != null) {
+                builder.setStoreFile(keyStoreFile)
+            } else if (privateKeyPem != null) {
+                builder.setPrivateKeyPem(privateKeyPem).setPrivateKeyId(privateKeyId)
+            } else {
+                builder.setStoreFile(keyStore.file)
+            }
+            return builder.build()
+        }
+
+        def keyStore(Closure closure) {
+            ConfigureUtil.configure(closure, keyStore)
+        }
+
+        public void isConfigured() {
+            if (clientEmail == null || clientEmail.isEmpty()) {
+                throw new IllegalArgumentException("Service account client email is required.");
+            }
+            if (keyStoreFile != null) {
+                if (!keyStoreFile.exists()) {
+                    throw new IllegalArgumentException("Service account P12 key file [" + keyStoreFile + "] not found.");
+                }
+            } else if (privateKeyPem != null) {
+                if (privateKeyPem.isEmpty()) {
+                    throw new IllegalArgumentException("Service account private key is empty.");
+                }
+                if (privateKeyId == null || privateKeyId.isEmpty()) {
+                    throw new IllegalArgumentException("Service account private key id is required.");
+                }
+            } else {
+                keyStore.isConfigured();
+            }
+        }
+    }
+
+    class KeyStoreConfig {
+        def File file;
         def String storePassword = 'notasecret';
         def String keyAlias = 'privatekey';
         def String keyPassword = 'notasecret';
 
-        public AndroidPublisher buildPublisher() {
-            return new AndroidPublisherBuilder()
-                    .setStoreFile(storeFile)
-                    .setStorePassword(storePassword)
-                    .setAlias(keyAlias)
-                    .setKeyPassword(keyPassword)
-                    .setEmail(email)
-                    .build()
-        }
-
         public void isConfigured() {
-            if (email == null || email.isEmpty()) {
-                throw new IllegalArgumentException("Service account email is required.");
-            }
-            if (storeFile == null || !storeFile.exists()) {
-                throw new IllegalArgumentException("Service account P12 key file is required. Filename [" + storeFile + "] not found.");
+            if (file == null || !file.exists()) {
+                throw new IllegalArgumentException("Service account P12 key file is required. Filename [" + file + "] not found.");
             }
         }
     }

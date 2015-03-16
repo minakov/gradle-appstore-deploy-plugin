@@ -150,8 +150,8 @@ class PublishResourcesTaskTest {
         project.appStoreDeploy {
             googlePlay {
                 serviceAccount {
-                    email = 'email'
-                    storeFile = project.file('key.p12')
+                    clientEmail = 'email'
+                    keyStoreFile = project.file('key.p12')
                 }
             }
         }
