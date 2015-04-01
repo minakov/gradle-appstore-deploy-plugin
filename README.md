@@ -128,7 +128,8 @@ appStoreDeploy {
     googlePlay {
         serviceAccount {
             clientEmail = 'your-service-account-client_id'
-            keyStoreFile file('key.p12')
+            privateKeyId = 'your-service-account-private_key_id'
+            privateKeyPem = 'your-service-account-private_key'
         }
     }
 }
@@ -139,8 +140,7 @@ appStoreDeploy {
     googlePlay {
         serviceAccount {
             clientEmail = 'your-service-account-client_id'
-            privateKeyId = 'your-service-account-private_key_id'
-            privateKeyPem = 'your-service-account-private_key'
+            keyStoreFile file('key.p12')
         }
     }
 }
@@ -162,6 +162,7 @@ appStoreDeploy {
                 keyPassword = 'notasecret'
             }
         }
+        tracks = ['alpha', 'beta', 'production']
     }
     resources {
         sourceDir = 'store-resources'

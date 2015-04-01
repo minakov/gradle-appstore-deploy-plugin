@@ -73,7 +73,7 @@ class BootstrapResourcesTask extends DefaultTask {
                 File file = new File(langDir, "${it}.txt")
                 file.exists() || file << ""
             }
-            ["alpha", "beta", "production"].each {
+            extension.googlePlay.tracks.each {
                 File file = new File(langDir, "recentChanges${it.capitalize()}.txt")
                 file.exists() || file << ""
             }

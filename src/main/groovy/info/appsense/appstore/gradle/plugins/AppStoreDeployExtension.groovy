@@ -43,6 +43,7 @@ class AppStoreDeployExtension {
     class GooglePlayConfig {
         ReleaseStrategyConfig releaseStrategy = new ReleaseStrategyConfig()
         ServiceAccountConfig serviceAccount = new ServiceAccountConfig()
+        Set<String> tracks = ["alpha", "beta", "production"]
 
         def releaseStrategy(Closure closure) {
             ConfigureUtil.configure(closure, releaseStrategy)
@@ -55,6 +56,11 @@ class AppStoreDeployExtension {
         public void isConfigured() {
             releaseStrategy.isConfigured()
             serviceAccount.isConfigured()
+            tracks.each {
+                if (!["alpha", "beta", "production"].contains(it)) {
+                    throw new IllegalArgumentException("Tracks [" + it + "] is not a valid. Expects: [alpha, beta, production]");
+                }
+            }
         }
     }
 
@@ -65,7 +71,7 @@ class AppStoreDeployExtension {
 
         public void isConfigured() {
             if (!PERCENTAGES.contains(percentageOfUsers)) {
-                throw new IllegalArgumentException("PercentageOfUsers [" + percentageOfUsers + "] is not a invalid. Expects: [0.5, 1, 5, 10, 20, 50, 100]");
+                throw new IllegalArgumentException("PercentageOfUsers [" + percentageOfUsers + "] is not a valid. Expects: [0.5, 1, 5, 10, 20, 50, 100]");
             }
         }
     }
