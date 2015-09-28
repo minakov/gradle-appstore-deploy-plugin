@@ -19,3 +19,7 @@ env:
   global:
   - secure: 6SJdpQNSpg/rmqKY1jcN4S5rgrqaSosCVNY8/cnM9uk/PiH5u4FxdfZ7nMSBtQRd0M3Y7ZatIHcESf/pvsACW0rvJ0k9DpytfPNIzzb3L+uDcgII1btURGnVOOOOGRiTx/8sETKdPmIm1/dqvhaguwm+ELFg44KkbVJnNluF3mU=
   - secure: nZqfgMkx7pAu5gyKahHAioCNpDhHrpc+dr2OCmmT+t/ZJbf4NbBkWE5TZCu/V9X+sRQaUqKsiJjTx8laW4x6+x15rtWHwpplroYrfsGzXhgn4m3x5+PYGMeZ2Jxdk8LQDoMeAakgrKEYQ5ERC0oO+yvqhgQZaQKm8CSbWabg50M=
+before_install:
+  - pip install --user codecov
+after_success:
+  - codecov
